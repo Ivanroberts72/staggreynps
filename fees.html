@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fee Management</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Fee Management</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Record a Fee Payment</h2>
+      <form id="feeForm">
+        <label>Student Name:
+          <input type="text" id="studentName" required>
+        </label>
+        <label>Amount Paid:
+          <input type="number" id="amountPaid" required>
+        </label>
+        <label>Date of Payment:
+          <input type="date" id="paymentDate" required>
+        </label>
+        <button type="submit">Record Payment</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Fee Payment Records</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Amount Paid</th>
+            <th>Payment Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="feeTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const feeForm = document.getElementById('feeForm');
+    const feeTable = document.getElementById('feeTableBody');
+
+    // Load fee records from localStorage
+    function loadFeeRecords() {
+      feeTable.innerHTML = '';
+      const feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
+      feeRecords.forEach((record, index) => {
+        const row = `<tr>
+            <td>${record.student}</td>
+            <td>${record.amount}</td>
+            <td>${record.date}</td>
+            <td><button onclick="removeFeeRecord(${index})">Delete</button></td>
+          </tr>`;
+        feeTable.innerHTML += row;
+      });
+    }
+
+    // Remove a fee record
+    function removeFeeRecord(index) {
+      const feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
+      feeRecords.splice(index, 1);
+      localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
+      loadFeeRecords();
+    }
+
+    // Add a fee record
+    feeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const student = document.getElementById('studentName').value.trim();
+      const amount = document.getElementById('amountPaid').value.trim();
+      const date = document.getElementById('paymentDate').value.trim();
+
+      const feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
+      feeRecords.push({ student, amount, date });
+      localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
+
+      feeForm.reset();
+      loadFeeRecords();
+    });
+
+    // Initial load of fee records
+    loadFeeRecords();
+  </script>
+</body>
+</html>

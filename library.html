@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library Management</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Library Management</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+        <li><a href="fees.html">Fees</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Add a New Book</h2>
+      <form id="bookForm">
+        <label>Book Title:
+          <input type="text" id="bookTitle" required>
+        </label>
+        <label>Author:
+          <input type="text" id="bookAuthor" required>
+        </label>
+        <label>ISBN:
+          <input type="text" id="bookISBN" required>
+        </label>
+        <label>Availability:
+          <select id="bookAvailability" required>
+            <option value="Available">Available</option>
+            <option value="Checked Out">Checked Out</option>
+          </select>
+        </label>
+        <button type="submit">Add Book</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Library Catalog</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Availability</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="libraryTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const bookForm = document.getElementById('bookForm');
+    const libraryTable = document.getElementById('libraryTableBody');
+
+    // Load books from localStorage
+    function loadLibrary() {
+      libraryTable.innerHTML = '';
+      const books = JSON.parse(localStorage.getItem('libraryBooks')) || [];
+      books.forEach((book, index) => {
+        const row = `<tr>
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.isbn}</td>
+            <td>${book.availability}</td>
+            <td><button onclick="removeBook(${index})">Delete</button></td>
+          </tr>`;
+        libraryTable.innerHTML += row;
+      });
+    }
+
+    // Remove a book
+    function removeBook(index) {
+      const books = JSON.parse(localStorage.getItem('libraryBooks')) || [];
+      books.splice(index, 1);
+      localStorage.setItem('libraryBooks', JSON.stringify(books));
+      loadLibrary();
+    }
+
+    // Add a book
+    bookForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('bookTitle').value.trim();
+      const author = document.getElementById('bookAuthor').value.trim();
+      const isbn = document.getElementById('bookISBN').value.trim();
+      const availability = document.getElementById('bookAvailability').value;
+
+      const books = JSON.parse(localStorage.getItem('libraryBooks')) || [];
+      books.push({ title, author, isbn, availability });
+      localStorage.setItem('libraryBooks', JSON.stringify(books));
+
+      bookForm.reset();
+      loadLibrary();
+    });
+
+    // Initial load of library books
+    loadLibrary();
+  </script>
+</body>
+</html>

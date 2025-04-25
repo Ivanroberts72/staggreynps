@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Student Registration</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="classes.html">Timetable</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Register a New Student</h2>
+      <form id="studentForm">
+        <label>Full Name:
+          <input type="text" id="name" required>
+        </label>
+        <label>Student ID:
+          <input type="text" id="studentId" required>
+        </label>
+        <label>Class:
+          <input type="text" id="class" required>
+        </label>
+        <button type="submit">Add Student</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Registered Students</h2>
+      <table border="1" width="100%">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Student ID</th>
+            <th>Class</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const studentForm = document.getElementById('studentForm');
+    const studentTable = document.getElementById('studentTableBody');
+
+    function loadStudents() {
+      studentTable.innerHTML = '';
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.forEach((student, index) => {
+        const row = `<tr>
+            <td>${student.name}</td>
+            <td>${student.id}</td>
+            <td>${student.class}</td>
+            <td><button onclick="removeStudent(${index})">Delete</button></td>
+          </tr>`;
+        studentTable.innerHTML += row;
+      });
+    }
+
+    function removeStudent(index) {
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.splice(index, 1);
+      localStorage.setItem('students', JSON.stringify(students));
+      loadStudents();
+    }
+
+    studentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const id = document.getElementById('studentId').value.trim();
+      const className = document.getElementById('class').value.trim();
+
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.push({ name, id, class: className });
+      localStorage.setItem('students', JSON.stringify(students));
+
+      studentForm.reset();
+      loadStudents();
+    });
+
+    loadStudents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class Management</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Class Management</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Create a New Class</h2>
+      <form id="classForm">
+        <label>Class Name:
+          <input type="text" id="className" required>
+        </label>
+        <label>Class Code:
+          <input type="text" id="classCode" required>
+        </label>
+        <label>Teacher Assigned:
+          <input type="text" id="teacherAssigned" required>
+        </label>
+        <button type="submit">Add Class</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Registered Classes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Class Name</th>
+            <th>Class Code</th>
+            <th>Teacher Assigned</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="classTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const classForm = document.getElementById('classForm');
+    const classTable = document.getElementById('classTableBody');
+
+    // Load classes from localStorage
+    function loadClasses() {
+      classTable.innerHTML = '';
+      const classes = JSON.parse(localStorage.getItem('classes')) || [];
+      classes.forEach((classData, index) => {
+        const row = `<tr>
+            <td>${classData.name}</td>
+            <td>${classData.code}</td>
+            <td>${classData.teacher}</td>
+            <td><button onclick="removeClass(${index})">Delete</button></td>
+          </tr>`;
+        classTable.innerHTML += row;
+      });
+    }
+
+    // Remove a class
+    function removeClass(index) {
+      const classes = JSON.parse(localStorage.getItem('classes')) || [];
+      classes.splice(index, 1);
+      localStorage.setItem('classes', JSON.stringify(classes));
+      loadClasses();
+    }
+
+    // Add a class
+    classForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('className').value.trim();
+      const code = document.getElementById('classCode').value.trim();
+      const teacher = document.getElementById('teacherAssigned').value.trim();
+
+      const classes = JSON.parse(localStorage.getItem('classes')) || [];
+      classes.push({ name, code, teacher });
+      localStorage.setItem('classes', JSON.stringify(classes));
+
+      classForm.reset();
+      loadClasses();
+    });
+
+    // Initial load of classes
+    loadClasses();
+  </script>
+</body>
+</html>

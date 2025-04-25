@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Communication System</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Communication System</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Send a Message</h2>
+      <form id="messageForm">
+        <label>From:
+          <input type="text" id="messageFrom" placeholder="Your Name" required>
+        </label>
+        <label>To:
+          <input type="text" id="messageTo" placeholder="Recipient's Name" required>
+        </label>
+        <label>Message:
+          <textarea id="messageContent" rows="4" placeholder="Type your message" required></textarea>
+        </label>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Message Inbox</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="messageTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const messageForm = document.getElementById('messageForm');
+    const messageTable = document.getElementById('messageTableBody');
+
+    // Load messages from localStorage
+    function loadMessages() {
+      messageTable.innerHTML = '';
+      const messages = JSON.parse(localStorage.getItem('messages')) || [];
+      messages.forEach((message, index) => {
+        const row = `<tr>
+            <td>${message.from}</td>
+            <td>${message.to}</td>
+            <td>${message.content}</td>
+            <td>${message.date}</td>
+            <td><button onclick="removeMessage(${index})">Delete</button></td>
+          </tr>`;
+        messageTable.innerHTML += row;
+      });
+    }
+
+    // Remove a message
+    function removeMessage(index) {
+      const messages = JSON.parse(localStorage.getItem('messages')) || [];
+      messages.splice(index, 1);
+      localStorage.setItem('messages', JSON.stringify(messages));
+      loadMessages();
+    }
+
+    // Add a new message
+    messageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const from = document.getElementById('messageFrom').value.trim();
+      const to = document.getElementById('messageTo').value.trim();
+      const content = document.getElementById('messageContent').value.trim();
+      const date = new Date().toLocaleString();
+
+      const messages = JSON.parse(localStorage.getItem('messages')) || [];
+      messages.push({ from, to, content, date });
+      localStorage.setItem('messages', JSON.stringify(messages));
+
+      messageForm.reset();
+      loadMessages();
+    });
+
+    // Initial load of messages
+    loadMessages();
+  </script>
+</body>
+</html>

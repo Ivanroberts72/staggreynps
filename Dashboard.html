@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="icon" href="images/icons/icon-128x128.png"/>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <h2>ST. AGGREY CMS</h2>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="classes.html">Timetables</a></li>
+        <li><a href="assignments.html">Homework</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="announcements.html">Announcements</a></li>
+        <li><a href="marks.html">Record Marks</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="hamburger-menu" onclick="toggleSidebar()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+
+      <header>
+        <h1>Welcome to Class Management System</h1>
+        <p class="subtitle">Manage your school data, track attendance, assign homework, and more — all in one place.</p>
+      </header>
+
+      <main>
+        <section class="overview">
+          <h2>Dashboard Overview</h2>
+          <div class="dashboard-cards">
+            <div class="card">Total Students<br><strong>140</strong></div>
+            <div class="card">Today's Attendance<br><strong>126</strong></div>
+            <div class="card">Pending Homework<br><strong>4</strong></div>
+            <div class="card">Reports Due<br><strong>2</strong></div>
+          </div>
+        </section>
+
+        <section class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="action-grid">
+            <button onclick="location.href='student.html'">Register Student</button>
+            <button onclick="location.href='attendance.html'">Mark Attendance</button>
+            <button onclick="location.href='assignments.html'">Post Homework</button>
+            <button onclick="location.href='reports.html'">View Reports</button>
+          </div>
+        </section>
+      </main>
+ </div>
+     <footer>
+    <p>&copy; 2025 ST. AGGREY CLASS MANAGEMENT SYSTEM. All rights reserved. Designed by Womulira Ivan.</p>
+</footer>
+   
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+  function loadDashboardData() {
+  const students = JSON.parse(localStorage.getItem("students")) || [];
+  const teachers = JSON.parse(localStorage.getItem("teachers")) || [];
+  const marks = JSON.parse(localStorage.getItem("marksList")) || [];
+
+  document.getElementById("totalStudents").textContent = `Students: ${students.length}`;
+  document.getElementById("totalTeachers").textContent = `Teachers: ${teachers.length}`;
+
+  let totalPercent = 0;
+  marks.forEach(m => totalPercent += parseFloat(m.percent));
+  const avg = marks.length > 0 ? (totalPercent / marks.length).toFixed(1) : 0;
+
+  document.getElementById("averageMark").textContent = `Avg Mark: ${avg}%`;
+}
+
+document.addEventListener("DOMContentLoaded", loadDashboardData);
+  const loggedIn = localStorage.getItem("loggedIn");
+
+  if (loggedIn !== "true") {
+    // Redirect to login page
+    window.location.href = "login.html";
+  }
+  </script>
+</body>
+</html>

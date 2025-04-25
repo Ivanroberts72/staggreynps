@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reports</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Student Reports</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+        <li><a href="fees.html">Fees</a></li>
+        <li><a href="library.html">Library</a></li>
+        <li><a href="parents.html">Parent Portal</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Generate Student Report</h2>
+      <form id="reportForm">
+        <label>Enter Student ID:
+          <input type="text" id="studentId" placeholder="Enter Student ID" required>
+        </label>
+        <button type="submit">Generate Report</button>
+      </form>
+    </section>
+
+    <section id="reportSection" style="display:none;">
+      <h2>Report for Student ID: <span id="studentName"></span></h2>
+      <p><strong>Midterm Report:</strong> <span id="midtermReport"></span></p>
+      <p><strong>End of Term Report:</strong> <span id="endTermReport"></span></p>
+      <button id="backToForm">Back to Generate Report</button>
+    </section>
+  </main>
+
+  <script>
+    const reportForm = document.getElementById('reportForm');
+    const reportSection = document.getElementById('reportSection');
+    const studentName = document.getElementById('studentName');
+    const midtermReport = document.getElementById('midtermReport');
+    const endTermReport = document.getElementById('endTermReport');
+    const backToForm = document.getElementById('backToForm');
+
+    // Generate report based on student ID
+    reportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const studentId = document.getElementById('studentId').value.trim();
+
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      const student = students.find(st => st.id === studentId);
+
+      if (student) {
+        // Display student's reports
+        studentName.textContent = student.name;
+        midtermReport.textContent = student.midtermReport || 'No data available';
+        endTermReport.textContent = student.endTermReport || 'No data available';
+        
+        // Hide form and show the report
+        reportForm.style.display = 'none';
+        reportSection.style.display = 'block';
+      } else {
+        alert('Student not found!');
+      }
+    });
+
+    // Back to form
+    backToForm.addEventListener('click', () => {
+      reportForm.style.display = 'block';
+      reportSection.style.display = 'none';
+      reportForm.reset();
+    });
+  </script>
+</body>
+</html>

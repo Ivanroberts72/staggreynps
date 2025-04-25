@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Settings</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+        <li><a href="fees.html">Fees</a></li>
+        <li><a href="library.html">Library</a></li>
+        <li><a href="parents.html">Parent Portal</a></li>
+        <li><a href="reports.html">Reports</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>System Settings</h2>
+      <form id="settingsForm">
+        <label>School Year:
+          <input type="text" id="schoolYear" placeholder="Enter School Year" required>
+        </label>
+        <label>Website Theme:
+          <select id="themeSelect">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label>Enable Parent Portal:
+          <input type="checkbox" id="parentPortalToggle">
+        </label>
+        <button type="submit">Save Settings</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Class Settings</h2>
+      <form id="classSettingsForm">
+        <label>Enable Online Classes:
+          <input type="checkbox" id="onlineClassesToggle">
+        </label>
+        <label>Enable Assignment Submission:
+          <input type="checkbox" id="assignmentSubmissionToggle">
+        </label>
+        <button type="submit">Save Class Settings</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Load saved settings from localStorage
+    function loadSettings() {
+      const settings = JSON.parse(localStorage.getItem('settings')) || {};
+
+      document.getElementById('schoolYear').value = settings.schoolYear || '';
+      document.getElementById('themeSelect').value = settings.theme || 'light';
+      document.getElementById('parentPortalToggle').checked = settings.enableParentPortal || false;
+      document.getElementById('onlineClassesToggle').checked = settings.enableOnlineClasses || false;
+      document.getElementById('assignmentSubmissionToggle').checked = settings.enableAssignmentSubmission || false;
+    }
+
+    // Save settings to localStorage
+    function saveSettings() {
+      const settings = {
+        schoolYear: document.getElementById('schoolYear').value,
+        theme: document.getElementById('themeSelect').value,
+        enableParentPortal: document.getElementById('parentPortalToggle').checked,
+        enableOnlineClasses: document.getElementById('onlineClassesToggle').checked,
+        enableAssignmentSubmission: document.getElementById('assignmentSubmissionToggle').checked,
+      };
+
+      localStorage.setItem('settings', JSON.stringify(settings));
+    }
+
+    // Event listener for settings form
+    document.getElementById('settingsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveSettings();
+      alert('Settings saved successfully!');
+    });
+
+    // Event listener for class settings form
+    document.getElementById('classSettingsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveSettings();
+      alert('Class settings saved successfully!');
+    });
+
+    // Load settings when the page is loaded
+    loadSettings();
+  </script>
+</body>
+</html>

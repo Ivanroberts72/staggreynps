@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignments</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Assignments Management</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="classes.html">Timetable</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Create a New Assignment</h2>
+      <form id="assignmentForm">
+        <label>Assignment Title:
+          <input type="text" id="title" required>
+        </label>
+        <label>Assignment Description:
+          <textarea id="description" required></textarea>
+        </label>
+        <label>Due Date:
+          <input type="date" id="dueDate" required>
+        </label>
+        <button type="submit">Add Assignment</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Upcoming Assignments</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="assignmentTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const assignmentForm = document.getElementById('assignmentForm');
+    const assignmentTable = document.getElementById('assignmentTableBody');
+
+    function loadAssignments() {
+      assignmentTable.innerHTML = '';
+      const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+      assignments.forEach((assignment, index) => {
+        const row = `<tr>
+            <td>${assignment.title}</td>
+            <td>${assignment.description}</td>
+            <td>${assignment.dueDate}</td>
+            <td><button onclick="removeAssignment(${index})">Delete</button></td>
+          </tr>`;
+        assignmentTable.innerHTML += row;
+      });
+    }
+
+    function removeAssignment(index) {
+      const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+      assignments.splice(index, 1);
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+      loadAssignments();
+    }
+
+    assignmentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const dueDate = document.getElementById('dueDate').value;
+
+      const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+      assignments.push({ title, description, dueDate });
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+
+      assignmentForm.reset();
+      loadAssignments();
+    });
+
+    loadAssignments();
+  </script>
+</body>
+</html>

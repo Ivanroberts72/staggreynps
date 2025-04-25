@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parent Portal</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Parent Portal</h1>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="student.html">Students</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="assignments.html">Assignments</a></li>
+        <li><a href="teacher.html">Teachers</a></li>
+        <li><a href="fees.html">Fees</a></li>
+        <li><a href="library.html">Library</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Your Child's Information</h2>
+      <form id="parentInfoForm">
+        <label>Child's Name:
+          <input type="text" id="childName" placeholder="Enter Child's Name" required>
+        </label>
+        <label>Parent's Email:
+          <input type="email" id="parentEmail" placeholder="Enter Parent's Email" required>
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Attendance Overview</h2>
+      <div id="attendanceOverview">
+        <p>No data available. Please enter the child's name.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Fee Status</h2>
+      <div id="feeStatus">
+        <p>No fee data available. Please enter the child's information.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Grades & Assignments</h2>
+      <div id="gradesAssignments">
+        <p>No grades or assignment data available.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const parentInfoForm = document.getElementById('parentInfoForm');
+    const attendanceOverview = document.getElementById('attendanceOverview');
+    const feeStatus = document.getElementById('feeStatus');
+    const gradesAssignments = document.getElementById('gradesAssignments');
+
+    // Load parent data from localStorage
+    function loadParentData() {
+      const parentData = JSON.parse(localStorage.getItem('parentData')) || {};
+
+      if (parentData.childName) {
+        // Update attendance info
+        attendanceOverview.innerHTML = `<p>Child's Attendance: ${parentData.attendance}</p>`;
+        
+        // Update fee status
+        feeStatus.innerHTML = `<p>Fee Status: ${parentData.feeStatus}</p>`;
+        
+        // Update grades & assignments
+        gradesAssignments.innerHTML = `<p>Grades: ${parentData.grades}</p>`;
+      } else {
+        attendanceOverview.innerHTML = '<p>No data available. Please enter the child\'s name.</p>';
+        feeStatus.innerHTML = '<p>No fee data available. Please enter the child\'s information.</p>';
+        gradesAssignments.innerHTML = '<p>No grades or assignment data available.</p>';
+      }
+    }
+
+    // Add parent data to localStorage
+    parentInfoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const childName = document.getElementById('childName').value.trim();
+      const parentEmail = document.getElementById('parentEmail').value.trim();
+
+      // Example data for the child
+      const parentData = {
+        childName,
+        parentEmail,
+        attendance: '80% attendance this semester',
+        feeStatus: 'Fee payment is up to date',
+        grades: 'A in Mathematics, B in English, A in Science',
+      };
+
+      localStorage.setItem('parentData', JSON.stringify(parentData));
+
+      loadParentData();
+    });
+
+    // Initial load of parent data
+    loadParentData();
+  </script>
+</body>
+</html>

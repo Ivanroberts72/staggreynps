@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marks Recording</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .marks-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.marks-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.marks-form input {
+  flex: 1 1 180px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.marks-form button {
+  padding: 10px 20px;
+  background-color: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.marks-table th,
+.marks-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 600px) {
+  .marks-form input,
+  .marks-form button {
+    flex: 1 1 100%;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Record Marks</h1>
+  </header>
+
+  <main class="marks-container">
+
+    <!-- Form to record marks -->
+    <section class="marks-form-section">
+      <form id="marksForm" class="marks-form">
+        <input type="text" id="studentName" placeholder="Student Name" required>
+        <input type="text" id="subject" placeholder="Subject" required>
+        <input type="number" id="score" placeholder="Score" required>
+        <input type="number" id="total" placeholder="Total Marks" required>
+        <button type="submit">Add Record</button>
+      </form>
+    </section>
+
+    <!-- Marks table -->
+    <section class="marks-table-section">
+      <h2>Recorded Marks</h2>
+      <div class="table-responsive">
+        <table class="marks-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Subject</th>
+              <th>Score</th>
+              <th>Total</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody id="marksBody">
+            <!-- Marks will appear here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const form = document.getElementById("marksForm");
+const marksBody = document.getElementById("marksBody");
+
+let marksList = JSON.parse(localStorage.getItem("marksList")) || [];
+
+function renderMarks() {
+  marksBody.innerHTML = "";
+
+  marksList.forEach((mark, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${mark.name}</td>
+      <td>${mark.subject}</td>
+      <td>${mark.score}</td>
+      <td>${mark.total}</td>
+      <td>${mark.percent}%</td>
+    `;
+    marksBody.appendChild(row);
+  });
+}
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("studentName").value.trim();
+  const subject = document.getElementById("subject").value.trim();
+  const score = parseFloat(document.getElementById("score").value);
+  const total = parseFloat(document.getElementById("total").value);
+
+  if (name && subject && !isNaN(score) && !isNaN(total) && total > 0) {
+    const percent = ((score / total) * 100).toFixed(2);
+
+    const newMark = { name, subject, score, total, percent };
+    marksList.push(newMark);
+
+    localStorage.setItem("marksList", JSON.stringify(marksList));
+    renderMarks();
+    form.reset();
+  }
+});
+
+// Load and display marks on page load
+document.addEventListener("DOMContentLoaded", renderMarks);
+  </script>
+</body>
+</html>
