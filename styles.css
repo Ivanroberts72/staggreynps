@@ -15,8 +15,8 @@ body {
 }
 
 header {
-  background-color: #00796b;
-  color: #fff;
+  background-color: navy;
+  color: red;
   text-align: center;
   padding: 20px 0;
 }
@@ -27,7 +27,7 @@ h1 {
 }
 
 nav {
-  background-color: #004d40;
+  background-color: blue;
   color: white;
   padding: 15px;
   position: sticky;
